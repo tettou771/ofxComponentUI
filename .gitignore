@@ -1,3 +1,4 @@
 example/*
 !example/src
 !example/addons.make
+addons
