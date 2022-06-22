@@ -5,13 +5,16 @@
 
 using namespace ofxComponent;
 
-class A : public ofxComponentBase {
+class A : public View {
 public:
 	A() {}
 	void onDraw() override {
 		ofSetColor(200);
 		ofNoFill();
-		ofDrawRectangle(0, 0, getWidth(), getHeight());
+		ofDrawRectangle(1, 1, getWidth()-1, getHeight()-1);
+        ofDrawLine(1,1,getWidth()-1, getHeight()-1);
+        ofDrawLine(1, getHeight()-1, getWidth()-1, 1);
+        ofDrawCircle(getWidth()/2, getHeight()/2, MIN(getWidth(), getHeight())/2);
 	}
 };
 

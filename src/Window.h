@@ -1,6 +1,16 @@
 #pragma once
 #include "ofxComponent.h"
+
 namespace ofxComponent {
+    class View : public ofxComponentBase {
+    public:
+        View(){setConstrain(true);}
+        void setContents(shared_ptr<ofxComponentBase> _contents);
+        shared_ptr<ofxComponentBase> getContents() {return contents;};
+    protected:
+        shared_ptr<ofxComponentBase> contents;
+    };
+
     class WindowHomeButton : public ofxComponentBase {
     public:
         void onDraw() override;
@@ -14,8 +24,8 @@ namespace ofxComponent {
     /// </summary>
     class Window : public ofxComponentBase {
     public:
-        Window(string title, int x, int y, int w, int h, shared_ptr<ofxComponentBase> contents);
-        Window(string title, ofRectangle rect, shared_ptr<ofxComponentBase> contents);
+        Window(string title, int x, int y, int w, int h);
+        Window(string title, ofRectangle rect);
 
         // ofxComponentBase
         void onStart() override;
@@ -39,10 +49,16 @@ namespace ofxComponent {
         void alignTo(Align direction, shared_ptr<Window> other);
 
         static const int titleBarHeight = 20;
+        
+        void setView(shared_ptr<View> _view);
+        shared_ptr<View> getView(){
+            return view;
+        }
 
     private:
         string title, titleAttribute;
-        shared_ptr<ofxComponentBase> contents;
+        shared_ptr<View> view;
+
         bool cornarDragging = false;
 
         // initial size
@@ -50,6 +66,6 @@ namespace ofxComponent {
         shared_ptr<WindowHomeButton> homeButton = nullptr;
         void onHomeButton();
 
-        void updateContentsRect();
+        void updateViewRect();
     };
 }

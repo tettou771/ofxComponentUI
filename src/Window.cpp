@@ -2,19 +2,32 @@
 
 using namespace ofxComponent;
 
-Window::Window(string title, int x, int y, int w, int h, shared_ptr<ofxComponentBase> contents) {
-	Window(title, ofRectangle(x, y, w, h), contents);
+void View::setContents(shared_ptr<ofxComponentBase> _contents) {
+    if (!_contents) return;
+    
+    // if already exists, remove content
+    if (contents) {
+        removeChild(contents);
+    }
+    
+    contents = _contents;
+    
+    // insert before scroll bars
+    insertChild(contents, 0);
 }
 
-Window::Window(string title, ofRectangle _rect, shared_ptr<ofxComponentBase> contents)
-	:title(title), contents(contents) {
+Window::Window(string title, int x, int y, int w, int h) {
+	Window(title, ofRectangle(x, y, w, h));
+}
+
+Window::Window(string title, ofRectangle _rect)
+	:title(title) {
 	auto withTitleBarRect = _rect;
 	withTitleBarRect.height += titleBarHeight;
 	setRect(withTitleBarRect);
 }
 
 void Window::onStart() {
-	addChild(contents);
 	setDraggable(true);
 	homeRect = getRect();
 
@@ -22,7 +35,7 @@ void Window::onStart() {
 	ofAddListener(homeButton->clickEvents, this, &Window::onHomeButton);
 	addChild(homeButton);
 
-	updateContentsRect();
+    updateViewRect();
 }
 
 // draw before children
@@ -45,7 +58,7 @@ void Window::postDraw() {
 	// window outline
 	ofNoFill();
 	ofSetColor(100);
-	ofDrawRectangle(0, 0, getWidth(), getHeight());
+	ofDrawRectangle(0.5, 0.5, getWidth()-1, getHeight()-1);
 
 	// window scale handle
 	ofPushMatrix();
@@ -92,9 +105,16 @@ void Window::onMousePressed(ofMouseEventArgs& mouse) {
 void Window::onMouseDragged(ofMouseEventArgs& mouse) {
 	if (cornarDragging) {
 		auto move = getMousePos() - getPreviousMousePos();
-		setWidth(getWidth() + move.x);
-		setHeight(getHeight() + move.y);
-	}
+        float minSize = 20;
+		setWidth(MAX(getWidth() + move.x, minSize));
+		setHeight(MAX(getHeight() + move.y, minSize + titleBarHeight));
+    }
+    else if (getDragging()) {
+        auto p = getPos();
+        if (p.x < 0 || p.y < 0) {
+            setPos(MAX(0, p.x), MAX(0, p.y));
+        }
+    }
 }
 
 void Window::onMouseReleased(ofMouseEventArgs& mouse) {
@@ -102,7 +122,7 @@ void Window::onMouseReleased(ofMouseEventArgs& mouse) {
 }
 
 void Window::onLocalMatrixChanged() {
-	updateContentsRect();
+    updateViewRect();
 
 	if (homeButton) {
 		float margin = 4;
@@ -139,21 +159,37 @@ void Window::alignTo(Align direction, shared_ptr<Window> other) {
 	setPos(p);
 }
 
+void Window::setView(shared_ptr<View> _view) {
+    // ignore if nullptr
+    if (!_view) return;
+
+    // remove already added view
+    if (view) {
+        removeChild(view);
+    }
+
+    // set
+    view = _view;
+    addChild(view);
+
+    updateViewRect();
+}
+
 void Window::onHomeButton() {
 	// move to home position
 	setRect(homeRect);
 	setDragging(false);
 }
 
-void Window::updateContentsRect() {
-	if (!contents) return;
+void Window::updateViewRect() {
+	if (!view) return;
 
 	ofRectangle r;
 	r.x = 0;
 	r.y = titleBarHeight;
 	r.width = getWidth();
 	r.height = getHeight() - titleBarHeight;
-	contents->setRect(r);
+	view->setRect(r);
 }
 
 void WindowHomeButton::onDraw() {

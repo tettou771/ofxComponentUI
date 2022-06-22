@@ -6,20 +6,18 @@ using namespace ofxComponent;
 void ofApp::setup(){
 	auto componentManager = make_shared<ofxComponentManager>();
 
-	auto window1 = make_shared<A>();
+    ofRectangle rect(100, 100, 500, 400);
+	auto window1 = make_shared<Window>("Window 1", rect);
+    //window1->setConstrain(true);
 	window1->setDraggable(false);
-	window1->setPos(100, 100);
-	window1->setWidth(500);
-	window1->setHeight(400);
-
-	auto objectB = make_shared<A>();
-	objectB->setDraggable(true);
-	objectB->setPos(100, 100);
-	objectB->setWidth(200);
-	objectB->setHeight(200);
-
-	window1->addChild(objectB);
-
+    
+    auto contentsA = make_shared<A>();
+    contentsA->setRect(ofRectangle(0, 0, 300, 200));
+    //auto view = make_shared<ScrollView>(ScrollView::Width);
+    auto view = make_shared<FitView>(FitView::SmallFit);
+    view->setContents(contentsA);
+    window1->setView(view);
+    
 	componentManager->addChild(window1);
 	componentManager->setup();
 }

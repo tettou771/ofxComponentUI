@@ -1,7 +1,5 @@
 #pragma once
 #include "ofxComponent.h"
-#include "ImageView.h"
-#include "FboView.h"
 
 namespace ofxComponent {
 class ToggleButton : public ofxComponentBase {
