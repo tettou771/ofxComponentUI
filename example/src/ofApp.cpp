@@ -6,20 +6,71 @@ using namespace ofxComponent;
 void ofApp::setup(){
 	auto componentManager = make_shared<ofxComponentManager>();
 
-    ofRectangle rect(100, 100, 500, 400);
-	auto window1 = make_shared<Window>("Window 1", rect);
-    //window1->setConstrain(true);
-	window1->setDraggable(false);
+    // make StretchView (NoCrop) window
+    {
+        auto contents = make_shared<A>();
+        contents->setRect(ofRectangle(0, 0, 200, 200));
+
+        auto view = make_shared<StretchView>(StretchView::NoCrop);
+        view->setContents(contents);
+
+        ofRectangle rect(50, 50, 400, 300);
+        auto window = make_shared<Window>("Stretch view NoCrop", rect);
+        window->setDraggable(false);
+        window->setView(view);
+
+        componentManager->addChild(window);
+    }
     
-    auto contentsA = make_shared<A>();
-    contentsA->setRect(ofRectangle(0, 0, 300, 200));
-    //auto view = make_shared<ScrollView>(ScrollView::Width);
-    auto view = make_shared<FitView>(FitView::SmallFit);
-    view->setContents(contentsA);
-    window1->setView(view);
+    // make StretchView (Crop) window
+    {
+        auto contents = make_shared<A>();
+        contents->setRect(ofRectangle(0, 0, 200, 200));
+
+        auto view = make_shared<StretchView>(StretchView::Crop);
+        view->setContents(contents);
+
+        ofRectangle rect(500, 50, 400, 300);
+        auto window = make_shared<Window>("Stretch view Crop", rect);
+        window->setDraggable(false);
+        window->setView(view);
+
+        componentManager->addChild(window);
+    }
+
+    // make Fit window
+    {
+        auto contents = make_shared<A>();
+        contents->setRect(ofRectangle(0, 0, 600, 400));
+
+        auto view = make_shared<FitView>();
+        view->setContents(contents);
+
+        ofRectangle rect(50, 400, 400, 300);
+        auto window = make_shared<Window>("Fit view", rect);
+        window->setDraggable(false);
+        window->setView(view);
+
+        componentManager->addChild(window);
+    }
+
+    // make ScrollView window
+    {
+        auto contents = make_shared<A>();
+        contents->setRect(ofRectangle(0, 0, 600, 400));
+
+        auto view = make_shared<ScrollView>();
+        view->setContents(contents);
+
+        ofRectangle rect(500, 400, 400, 300);
+        auto window = make_shared<Window>("Scroll view", rect);
+        window->setDraggable(false);
+        window->setView(view);
+
+        componentManager->addChild(window);
+    }
     
-	componentManager->addChild(window1);
-	componentManager->setup();
+    componentManager->setup();
 }
 
 //--------------------------------------------------------------

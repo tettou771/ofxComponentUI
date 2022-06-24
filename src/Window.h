@@ -2,11 +2,14 @@
 #include "ofxComponent.h"
 
 namespace ofxComponent {
+    class Window;
+
     class View : public ofxComponentBase {
     public:
         View(){setConstrain(true);}
         void setContents(shared_ptr<ofxComponentBase> _contents);
         shared_ptr<ofxComponentBase> getContents() {return contents;};
+        shared_ptr<Window> getParentWindow();
     protected:
         shared_ptr<ofxComponentBase> contents;
     };

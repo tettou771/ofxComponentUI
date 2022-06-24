@@ -3,105 +3,181 @@
 
 using namespace ofxComponent;
 
-ScrollView::ScrollView() {}
-ScrollView::ScrollView(ResizeMode mode) : resizeMode(mode){}
+ScrollView::ScrollView() {
+	fitMode = None;
+	speed = 10;
+	barHDragging = barVDragging = false;
+	setConstrain(true);
+}
 
 void ScrollView::onStart() {
-    setConstrain(true);
+	barV = make_shared<ScrollBar>();
+	barH = make_shared<ScrollBar>();
+	addChild(barV);
+	addChild(barH);
+	updateScrollBar();
 }
 
 void ScrollView::onUpdate() {
-    
+
 }
 
 void ScrollView::onDraw() {
-    
+
 }
 
-void ScrollView::onMouseMoved(ofMouseEventArgs &mosue) {}
-void ScrollView::onMousePressed(ofMouseEventArgs &mosue) {}
-void ScrollView::onMouseDragged(ofMouseEventArgs &mosue) {}
-void ScrollView::onMouseReleased(ofMouseEventArgs &mosue) {}
+void ScrollView::onMouseMoved(ofMouseEventArgs& mosue) {}
+void ScrollView::onMousePressed(ofMouseEventArgs& mosue) {
+	if (!barH || !barV) return;
 
-void ScrollView::onMouseScrolled(ofMouseEventArgs &mouse) {
-    if (!contents) return;
-    
-    // can not scroll
-    if (resizeMode == Both) return;
+	if (barH->getActive() && barH->isMouseInside()) {
+		barHDragging = true;
+	}
+	// H & V is controlled exclusive
+	else if (barV->getActive() && barV->isMouseInside()) {
+		barVDragging = true;
+	}
+}
 
-    float scrollSpeed = 5;
-    
-    auto contentsPos = contents->getPos();
-    
-    // horizontal scroll
-    if (isHorizontalScrollEnabled()) {
-        if (contents->getWidth() <= getWidth()) {
-            contentsPos.x = 0;
-        }
-        else {
-            contentsPos.x += mouse.scrollX * scrollSpeed;
-            
-            // avoid overrun
-            float maxPos = 0;
-            float minPos = getWidth() - contents->getWidth();
-            contentsPos.x = MIN(MAX(contentsPos.x, minPos), maxPos);
-        }
+void ScrollView::onMouseDragged(ofMouseEventArgs& mosue) {
+	if (!contents || !barH || !barV) return;
 
-    }
-    
-    // vertical scroll
-    if (isVerticalScrollEnabled()) {
-        if (contents->getHeight() <= getHeight()) {
-            contentsPos.y = 0;
-        }
-        else {
-            contentsPos.y += mouse.scrollY * scrollSpeed;
-            
-            // avoid overrun
-            float maxPos = 0;
-            float minPos = getHeight() - contents->getHeight();
-            contentsPos.y = MIN(MAX(contentsPos.y, minPos), maxPos);
-        }
-    }
+	ofVec2f move(ofGetMouseX() - ofGetPreviousMouseX(), ofGetMouseY() - ofGetPreviousMouseY());
 
-    contents->setPos(contentsPos);
+	if (barHDragging || barVDragging) {
+		if (barHDragging) {
+			scrollX(-move.x * contents->getWidth() / getWidth());
+		}
+
+		if (barVDragging) {
+			scrollY(-move.y * contents->getHeight() / getHeight());
+		}
+	}
+}
+void ScrollView::onMouseReleased(ofMouseEventArgs& mosue) {
+	barHDragging = barVDragging = false;
+}
+
+void ScrollView::onMouseScrolled(ofMouseEventArgs& mouse) {
+	scrollX(mouse.scrollX * speed);
+	scrollY(mouse.scrollY * speed);
 }
 
 void ScrollView::onLocalMatrixChanged() {
-    if (!contents) return;
-    
-    if (resizeMode == Both || resizeMode == Width) {
-        contents->setWidth(getWidth());
-    }
-    if (resizeMode == Both || resizeMode == Height) {
-        contents->setHeight(getHeight());
-    }
-    
-    updateScrollBar();
+	if (!contents) return;
+
+	switch (fitMode) {
+	case Width:
+		contents->setWidth(getWidth());
+		return;
+	case Height:
+		contents->setHeight(getHeight());
+		return;
+	}
+
+	updateScrollBar();
 }
 
- void ScrollView::updateScrollBar() {
- //    if ();
- }
-
-/*
-shared_ptr<Window> ScrollView::getParentWindow() {
-    shared_ptr<Window> w = nullptr;
-    auto child = static_pointer_cast<ofxComponentBase>(shared_from_this());
-    while(true) {
-        auto p = child->getParent();
-        if (!p) return nullptr;
-        
-        auto w = dynamic_pointer_cast<Window>(p);
-        if (w) {
-            return w;
-        } else {
-            child = p;
-        }
-    }
-    
-    //return nullptr;
+void ofxComponent::ScrollView::setScrollSpeed(float _speed) {
+	speed = MAX(1, _speed);
 }
-*/
 
+void ofxComponent::ScrollView::setFitMode(FitMode _mode) {
+	fitMode = _mode;
+	onLocalMatrixChanged();
+	updateScrollBar();
+}
 
+void ofxComponent::ScrollView::scrollX(float x) {
+	if (!contents) return;
+
+	auto contentsPos = contents->getPos();
+
+	// horizontal scroll
+	if (contents->getWidth() <= getWidth()) {
+		contentsPos.x = 0;
+	}
+	else {
+		contentsPos.x += x;
+
+		// avoid overrun
+		float maxPos = 0;
+		float minPos = getWidth() - contents->getWidth();
+		contentsPos.x = MIN(MAX(contentsPos.x, minPos), maxPos);
+	}
+
+	contents->setPos(contentsPos);
+
+	updateScrollBar();
+}
+
+void ofxComponent::ScrollView::scrollY(float y) {
+	if (!contents) return;
+
+	auto contentsPos = contents->getPos();
+
+	// vertical scroll
+	if (contents->getHeight() <= getHeight()) {
+		contentsPos.y = 0;
+	}
+	else {
+		contentsPos.y += y;
+
+		// avoid overrun
+		float maxPos = 0;
+		float minPos = getHeight() - contents->getHeight();
+		contentsPos.y = MIN(MAX(contentsPos.y, minPos), maxPos);
+	}
+
+	// dominant position
+	contentsPos.x = round(contentsPos.x);
+	contentsPos.y = round(contentsPos.y);
+
+	contents->setPos(contentsPos);
+
+	updateScrollBar();
+}
+
+void ScrollView::updateScrollBar() {
+	if (!contents) return;
+	if (!barH || !barV) return;
+
+	float barWidth = 6;
+
+	// horizontal
+	if (contents->getWidth() <= getWidth()) {
+		barH->setActive(false);
+	}
+	else {
+		ofRectangle r;
+		r.height = barWidth;
+		r.y = getHeight() - barWidth - 1;
+		r.width = getWidth() * getWidth() / contents->getWidth() + barWidth;
+		r.x = (getWidth() - barWidth) * (-contents->getPos().x) / contents->getWidth();
+		barH->setActive(true);
+		barH->setRect(r);
+	}
+
+	// vertical
+	if (contents->getWidth() <= getWidth()) {
+		barV->setActive(false);
+	}
+	else {
+		ofRectangle r;
+		r.width = barWidth;
+		r.x = getWidth() - barWidth - 1;
+		r.height = getHeight() * getHeight() / contents->getHeight() + barWidth;
+		r.y = (getHeight() - barWidth) * (-contents->getPos().y) / contents->getHeight();
+		barV->setActive(true);
+		barV->setRect(r);
+	}
+}
+
+void ofxComponent::ScrollBar::onDraw() {
+	if (getWidth() <= 0 || getHeight() <= 0) return;
+
+	ofFill();
+	ofSetColor(200, 150);
+	float r = MIN(getWidth(), getHeight()) / 2;
+	ofDrawRectRounded(0, 0, getWidth(), getHeight(), r);
+}

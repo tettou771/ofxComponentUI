@@ -9,8 +9,14 @@ class A : public View {
 public:
 	A() {}
 	void onDraw() override {
+		// fill myself
+		ofSetColor(0, 40, 100);
+		ofDrawRectangle(0, 0, getWidth(), getHeight());
+
+		// draw cross hatch
 		ofSetColor(200);
 		ofNoFill();
+		ofSetLineWidth(3);
 		ofDrawRectangle(1, 1, getWidth()-1, getHeight()-1);
         ofDrawLine(1,1,getWidth()-1, getHeight()-1);
         ofDrawLine(1, getHeight()-1, getWidth()-1, 1);

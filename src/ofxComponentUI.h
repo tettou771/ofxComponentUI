@@ -4,3 +4,4 @@
 #include "Window.h"
 #include "ScrollView.h"
 #include "FitView.h"
+#include "StretchView.h"

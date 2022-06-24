@@ -16,6 +16,24 @@ void View::setContents(shared_ptr<ofxComponentBase> _contents) {
     insertChild(contents, 0);
 }
 
+shared_ptr<Window> View::getParentWindow() {
+	shared_ptr<Window> w = nullptr;
+	auto child = static_pointer_cast<ofxComponentBase>(shared_from_this());
+	while(true) {
+		auto p = child->getParent();
+		if (!p) return nullptr;
+
+		auto w = dynamic_pointer_cast<Window>(p);
+		if (w) {
+			return w;
+		} else {
+			child = p;
+		}
+	}
+
+	return nullptr;
+}
+
 Window::Window(string title, int x, int y, int w, int h) {
 	Window(title, ofRectangle(x, y, w, h));
 }
