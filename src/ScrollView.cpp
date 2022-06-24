@@ -73,12 +73,14 @@ void ScrollView::onLocalMatrixChanged() {
 	if (!contents) return;
 
 	switch (fitMode) {
+    case None:
+        break;
 	case FitWidth:
 		contents->setWidth(getWidth());
-		return;
+        break;
 	case FitHeight:
 		contents->setHeight(getHeight());
-		return;
+		break;
 	}
 
 	updateScrollBar();

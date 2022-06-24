@@ -53,9 +53,6 @@ public:
 		string label = ofToString(getIndex()) + " " + text;
 		ofDrawBitmapString(label, 4, 16);
 	}
-	void onMousePressed(ofMouseEventArgs& mouse) override {
-		if (isMouseInside()) text += " Click!";
-	}
 	void onMouseDragged(ofMouseEventArgs& mouse) override {
 		if (getDragging()) moved = true;
 	}
