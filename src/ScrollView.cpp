@@ -59,18 +59,24 @@ void ScrollView::onMouseReleased(ofMouseEventArgs& mosue) {
 }
 
 void ScrollView::onMouseScrolled(ofMouseEventArgs& mouse) {
-	scrollX(mouse.scrollX * speed);
-	scrollY(mouse.scrollY * speed);
+	if (fitMode == FitHeight) {
+		// if this only have horizontal scroll, mouse wheel is horizontal
+		scrollX(mouse.scrollY * speed);
+	}
+	else {
+		scrollX(mouse.scrollX * speed);
+		scrollY(mouse.scrollY * speed);
+	}
 }
 
 void ScrollView::onLocalMatrixChanged() {
 	if (!contents) return;
 
 	switch (fitMode) {
-	case Width:
+	case FitWidth:
 		contents->setWidth(getWidth());
 		return;
-	case Height:
+	case FitHeight:
 		contents->setHeight(getHeight());
 		return;
 	}
@@ -159,7 +165,7 @@ void ScrollView::updateScrollBar() {
 	}
 
 	// vertical
-	if (contents->getWidth() <= getWidth()) {
+	if (contents->getHeight() <= getHeight()) {
 		barV->setActive(false);
 	}
 	else {

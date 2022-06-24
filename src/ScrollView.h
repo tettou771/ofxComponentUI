@@ -33,8 +33,8 @@ namespace ofxComponent {
 
         enum FitMode {
             None,
-            Width,
-            Height
+            FitWidth,
+            FitHeight
         };
         
         void setFitMode(FitMode _mode);
