@@ -53,14 +53,14 @@ namespace ofxComponent {
 
         static const int titleBarHeight = 20;
         
-        void setView(shared_ptr<View> _view);
+        shared_ptr<View> setView(shared_ptr<View> _view);
         shared_ptr<View> getView(){
             return view;
         }
 
     private:
         string title, titleAttribute;
-        shared_ptr<View> view;
+        shared_ptr<View> view = nullptr;
 
         bool cornarDragging = false;
 

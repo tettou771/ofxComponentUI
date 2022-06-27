@@ -21,18 +21,23 @@ namespace ofxComponent {
 
 	class ListBox : public ofxComponentBase {
 	public:
+        enum Align {
+            Left,
+            Center,
+            Right,
+            FitWidth // resize element to fit width
+        };
+
+        ListBox(){}
+        ListBox(Align _align) :align(_align){}
+        void onStart() override;
 		void onLocalMatrixChanged() override;
-		void addElement(shared_ptr<ListElement> e);
+
+        void addElement(shared_ptr<ListElement> e);
 		void insertElement(shared_ptr<ListElement> e, int index);
 		void destroyElement(int index);
 		void updateList();
 
-		enum Align {
-			Left,
-			Center,
-			Right,
-			FitWidth // resize element to fit width
-		};
 		void setAlign(Align _align) {
 			align = _align;
 			updateList();

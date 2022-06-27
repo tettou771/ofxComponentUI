@@ -14,7 +14,14 @@ namespace ofxComponent {
 
     class ScrollView : public View {
     public:
+        enum FitMode {
+            None,
+            FitWidth,
+            FitHeight
+        };
+
         ScrollView();
+        ScrollView(FitMode _mode);
 
         // ofxComponentBase
         void onStart() override;
@@ -30,12 +37,6 @@ namespace ofxComponent {
         // ScrollView
         void setScrollSpeed(float _speed);
         float getScrollSpeed() {return speed;}
-
-        enum FitMode {
-            None,
-            FitWidth,
-            FitHeight
-        };
         
         void setFitMode(FitMode _mode);
         FitMode getFitMode() { return fitMode; }

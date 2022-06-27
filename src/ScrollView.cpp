@@ -10,6 +10,11 @@ ScrollView::ScrollView() {
 	setConstrain(true);
 }
 
+ScrollView::ScrollView(FitMode _mode) {
+    ScrollView();
+    setFitMode(_mode);
+}
+
 void ScrollView::onStart() {
 	barV = make_shared<ScrollBar>();
 	barH = make_shared<ScrollBar>();

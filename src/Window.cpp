@@ -177,10 +177,16 @@ void Window::alignTo(Align direction, shared_ptr<Window> other) {
 	setPos(p);
 }
 
-void Window::setView(shared_ptr<View> _view) {
-    // ignore if nullptr
-    if (!_view) return;
-
+shared_ptr<View> Window::setView(shared_ptr<View> _view) {
+    // if nullptr
+    if (!_view) {
+        // remove view
+        if (view){
+            view->destroy();
+        }
+        return nullptr;
+    }
+    
     // remove already added view
     if (view) {
         removeChild(view);
@@ -191,6 +197,8 @@ void Window::setView(shared_ptr<View> _view) {
     addChild(view);
 
     updateViewRect();
+    
+    return view;
 }
 
 void Window::onHomeButton() {

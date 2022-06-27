@@ -49,12 +49,17 @@ void ListElement::moveDown() {
 	}
 }
 
+void ListBox::onStart() {
+    updateList();
+}
+
 void ListBox::onLocalMatrixChanged() {
 	updateList();
 }
 
 void ListBox::addElement(shared_ptr<ListElement> e) {
 	insertElement(e, list.size());
+    updateList();
 }
 
 void ListBox::insertElement(shared_ptr<ListElement> e, int index) {
