@@ -28,6 +28,22 @@ namespace ofxComponent {
     /// </summary>
     class Window : public ofxComponentBase {
     public:
+        struct Appearance {
+            // colors
+            ofColor titleColor = ofColor(200);
+            ofColor titlebarColor = ofColor(70);
+            ofColor outlineColor = ofColor(120);
+            ofColor bgColor = ofColor(0, 120);
+            
+            // geometry
+            int titlebarHeight = 18;
+            int cornarHandle = 10;
+            
+            // setting
+            bool resizable = true;
+            bool movable = true;
+        };
+        
         Window(string title, int x, int y, int w, int h);
         Window(string title, ofRectangle rect);
 
@@ -43,36 +59,45 @@ namespace ofxComponent {
         // window
         void setTitle(string& t) { title = t; }
         string getTitle() { return title; }
-        void setTitleAttribute(string& a) { titleAttribute = a; }
-        string getTitleAttribute() { return titleAttribute; }
-        void setResizeEnabled(bool _enabled) {resizeEnabled = _enabled;}
-        bool getResizeEnabled() { return resizeEnabled;}
+        void setResizable(bool _resizable) {appearance.resizable = _resizable;}
+        bool getResizable() { return appearance.resizable;}
+        void setAppearance(Appearance a) { appearance = a; setMovable(a.movable);}
+        Appearance getAppearance() {return appearance;}
+        
+        // set default appearance (setting)
+        // to make same appearance window easy
+        static void setDefaultAppearance(Appearance a) {defaultAppearance = a;}
+        static Appearance getDefaultAppearance() {return defaultAppearance;}
 
         // align to other window
         enum Align {
             Left, Right, Top, Bottom
         };
         void alignTo(Align direction, shared_ptr<Window> other);
-
-        static const int titleBarHeight = 20;
         
         shared_ptr<View> setView(shared_ptr<View> _view);
         shared_ptr<View> getView(){
             return view;
         }
 
-    private:
-        string title, titleAttribute;
+    protected:
+        string title;
         shared_ptr<View> view = nullptr;
 
-        bool resizeEnabled = true;
+        // setting
+        Appearance appearance;
+        
         bool cornarDragging = false;
 
-        // initial size
+        // size of start
         ofRectangle homeRect;
         shared_ptr<WindowHomeButton> homeButton = nullptr;
         void onHomeButton();
 
         void updateViewRect();
+        
+        // default setting
+        // apply when make new window
+        static Appearance defaultAppearance;
     };
 }

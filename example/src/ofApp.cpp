@@ -6,6 +6,18 @@ using namespace ofxComponent;
 void ofApp::setup(){
 	auto componentManager = make_shared<ofxComponentManager>();
 
+    // let's try change window appearance
+    auto a = Window::getDefaultAppearance();
+    // a.titleColor = ofColor(255,255,0);
+    // a.titlebarColor = ofColor(0, 50, 100);
+    // a.outlineColor = ofColor(200, 0, 0);
+    // a.bgColor = ofColor(0, 100, 0, 100);
+    // a.titlebarHeight = 30;
+    // a.cornarHandle = 50;
+    // a.movable = false;
+    // a.resizable = false;
+    Window::setDefaultAppearance(a);
+    
     // make StretchView (NoCrop) window
     {
         auto contents = make_shared<A>();
@@ -16,7 +28,6 @@ void ofApp::setup(){
 
         ofRectangle rect(20, 20, 400, 300);
         auto window = make_shared<Window>("Stretch view NoCrop", rect);
-        window->setDraggable(false);
         window->setView(view);
 
         componentManager->addChild(window);
@@ -32,7 +43,6 @@ void ofApp::setup(){
 
         ofRectangle rect(440, 20, 400, 300);
         auto window = make_shared<Window>("Stretch view Crop", rect);
-        window->setDraggable(false);
         window->setView(view);
 
         componentManager->addChild(window);
@@ -48,7 +58,6 @@ void ofApp::setup(){
 
         ofRectangle rect(860, 20, 400, 300);
         auto window = make_shared<Window>("Fit view", rect);
-        window->setDraggable(false);
         window->setView(view);
 
         componentManager->addChild(window);
@@ -64,7 +73,6 @@ void ofApp::setup(){
 
         ofRectangle rect(20, 360, 400, 300);
         auto window = make_shared<Window>("Scroll view", rect);
-        window->setDraggable(false);
         window->setView(view);
 
         componentManager->addChild(window);
@@ -82,7 +90,6 @@ void ofApp::setup(){
 
         ofRectangle rect(440, 360, 400, 300);
         auto window = make_shared<Window>("Scroll view (fit width)", rect);
-        window->setDraggable(false);
         window->setView(view);
 
         componentManager->addChild(window);
@@ -110,7 +117,6 @@ void ofApp::setup(){
 
         ofRectangle rect(860, 360, 400, 300);
         auto window = make_shared<Window>("Scroll view", rect);
-        window->setDraggable(false);
         window->setView(view);
 
         componentManager->addChild(window);

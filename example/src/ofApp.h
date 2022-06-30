@@ -29,11 +29,11 @@ public:
 	MyListElement(string t, ofRectangle r) {
 		text = t;
 		setRect(r);
-		setDraggable(true);
+		setMovable(true);
 	}
 	string text;
 	void onUpdate() override {
-		if (getDragging()) {
+		if (getMoving()) {
 			if (getPrevious() && getPrevious()->getPos().y > getPos().y) {
 				moveUp();
 			}
@@ -54,7 +54,7 @@ public:
 		ofDrawBitmapString(label, 4, 16);
 	}
 	void onMouseDragged(ofMouseEventArgs& mouse) override {
-		if (getDragging()) moved = true;
+		if (getMoving()) moved = true;
 	}
 	void onMouseReleased(ofMouseEventArgs& mouse) override {
 		if (moved) {

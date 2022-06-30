@@ -2,6 +2,8 @@
 
 using namespace ofxComponent;
 
+Window::Appearance Window::defaultAppearance;
+
 void View::setContents(shared_ptr<ofxComponentBase> _contents) {
     if (!_contents) return;
     
@@ -35,16 +37,18 @@ shared_ptr<Window> View::getParentWindow() {
 	return nullptr;
 }
 
+
 Window::Window(string title, int x, int y, int w, int h) {
 	Window(title, ofRectangle(x, y, w, h));
 }
 
 Window::Window(string title, ofRectangle _rect)
 	:title(title) {
+    setAppearance(defaultAppearance);
 	auto withTitleBarRect = _rect;
-	withTitleBarRect.height += titleBarHeight;
+	withTitleBarRect.height += appearance.titlebarHeight;
 	setRect(withTitleBarRect);
-    setDraggable(true);
+    setMovable(true);
 }
 
 void Window::onStart() {
@@ -59,33 +63,31 @@ void Window::onStart() {
 
 // draw before children
 void Window::onDraw() {
+    // background
+    ofFill();
+    ofSetColor(appearance.bgColor);
+    ofDrawRectangle(0, 0, getWidth(), getHeight());
+    
 	// title bar
-	ofSetColor(50);
-	ofFill();
-	ofDrawRectangle(0, 0, getWidth(), titleBarHeight);
-	ofSetColor(200);
-	if (titleAttribute == "") {
-		ofDrawBitmapString(title, 4, 14);
-	}
-	else {
-		ofDrawBitmapString(title + " - " + titleAttribute, 4, 14);
-	}
+	ofSetColor(appearance.titlebarColor);
+	ofDrawRectangle(0, 0, getWidth(), appearance.titlebarHeight);
+	ofSetColor(appearance.titleColor);
+	ofDrawBitmapString(title, 4, 14);
 }
 
 // draw after children
 void Window::postDraw() {
 	// window outline
 	ofNoFill();
-	ofSetColor(100);
+	ofSetColor(appearance.outlineColor);
 	ofDrawRectangle(0.5, 0.5, getWidth()-1, getHeight()-1);
 
 	// window resize handle
-    if (resizeEnabled) {
+    if (appearance.resizable) {
         ofPushMatrix();
-        float margin = 4;
-        float size = titleBarHeight - margin * 2;
-        ofTranslate(getWidth() - margin, getHeight() - margin);
-        ofNoFill();
+        float size = appearance.cornarHandle;
+        ofTranslate(getWidth(), getHeight());
+        ofFill();
         ofDrawTriangle(-size, 0, 0, -size, 0, 0);
         ofPopMatrix();
     }
@@ -98,7 +100,7 @@ void Window::onMousePressed(ofMouseEventArgs& mouse) {
 
 	// in titlebar
 	// grab titlebar
-	if (getMouseY() < titleBarHeight) {
+	if (getMouseY() < appearance.titlebarHeight) {
 		// move most top
 		auto p = getParent();
 		if (p) {
@@ -108,10 +110,10 @@ void Window::onMousePressed(ofMouseEventArgs& mouse) {
 
 	// not titlebar
 	else {
-		setDragging(false);
+		setMoving(false);
 
-		int cornarSize = titleBarHeight;
-		if (resizeEnabled && getMouseX() > getWidth() - cornarSize && getMouseY() > getHeight() - cornarSize) {
+		int cornarSize = appearance.cornarHandle;
+		if (appearance.resizable && getMouseX() > getWidth() - cornarSize && getMouseY() > getHeight() - cornarSize) {
 			cornarDragging = true;
 
 			// move to most top
@@ -128,9 +130,9 @@ void Window::onMouseDragged(ofMouseEventArgs& mouse) {
 		auto move = getMousePos() - getPreviousMousePos();
         float minSize = 20;
 		setWidth(MAX(getWidth() + move.x, minSize));
-		setHeight(MAX(getHeight() + move.y, minSize + titleBarHeight));
+		setHeight(MAX(getHeight() + move.y, minSize + appearance.titlebarHeight));
     }
-    else if (getDragging()) {
+    else if (getMoving()) {
         auto p = getPos();
         if (p.x < 0 || p.y < 0) {
             setPos(MAX(0, p.x), MAX(0, p.y));
@@ -147,7 +149,7 @@ void Window::onLocalMatrixChanged() {
 
 	if (homeButton) {
 		float margin = 4;
-		homeButton->setRect(ofRectangle(getWidth() - titleBarHeight + margin, margin, titleBarHeight - margin * 2, titleBarHeight - margin * 2));
+		homeButton->setRect(ofRectangle(getWidth() - appearance.titlebarHeight + margin, margin, appearance.titlebarHeight - margin * 2, appearance.titlebarHeight - margin * 2));
 		homeButton->setActive(getRect() != homeRect);
 	}
 
@@ -207,7 +209,7 @@ shared_ptr<View> Window::setView(shared_ptr<View> _view) {
 void Window::onHomeButton() {
 	// move to home position
 	setRect(homeRect);
-	setDragging(false);
+	setMoving(false);
 }
 
 void Window::updateViewRect() {
@@ -218,9 +220,9 @@ void Window::updateViewRect() {
     
 	ofRectangle r;
 	r.x = frameWidth;
-	r.y = titleBarHeight + frameWidth;
+	r.y = appearance.titlebarHeight + frameWidth;
 	r.width = getWidth() - frameWidth * 2;
-	r.height = getHeight() - titleBarHeight - frameWidth * 2;
+	r.height = getHeight() - appearance.titlebarHeight - frameWidth * 2;
 	view->setRect(r);
 }
 
