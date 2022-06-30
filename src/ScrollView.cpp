@@ -3,6 +3,15 @@
 
 using namespace ofxComponent;
 
+void ScrollBar::onDraw() {
+    if (getWidth() <= 0 || getHeight() <= 0) return;
+
+    ofFill();
+    ofSetColor(200, 150);
+    float r = MIN(getWidth(), getHeight()) / 2;
+    ofDrawRectRounded(0, 0, getWidth(), getHeight(), r);
+}
+
 ScrollView::ScrollView() {
 	fitMode = None;
 	speed = 10;
@@ -20,7 +29,7 @@ void ScrollView::onStart() {
 	barH = make_shared<ScrollBar>();
 	addChild(barV);
 	addChild(barH);
-	updateScrollBar();
+    onLocalMatrixChanged();
 }
 
 void ScrollView::onUpdate() {
@@ -91,17 +100,21 @@ void ScrollView::onLocalMatrixChanged() {
 	updateScrollBar();
 }
 
+void ScrollView::onSetContents() {
+    onLocalMatrixChanged();
+}
+
 void ofxComponent::ScrollView::setScrollSpeed(float _speed) {
 	speed = MAX(1, _speed);
 }
 
-void ofxComponent::ScrollView::setFitMode(FitMode _mode) {
+void ScrollView::setFitMode(FitMode _mode) {
 	fitMode = _mode;
 	onLocalMatrixChanged();
 	updateScrollBar();
 }
 
-void ofxComponent::ScrollView::scrollX(float x) {
+void ScrollView::scrollX(float x) {
 	if (!contents) return;
 
 	auto contentsPos = contents->getPos();
@@ -124,7 +137,7 @@ void ofxComponent::ScrollView::scrollX(float x) {
 	updateScrollBar();
 }
 
-void ofxComponent::ScrollView::scrollY(float y) {
+void ScrollView::scrollY(float y) {
 	if (!contents) return;
 
 	auto contentsPos = contents->getPos();
@@ -184,13 +197,4 @@ void ScrollView::updateScrollBar() {
 		barV->setActive(true);
 		barV->setRect(r);
 	}
-}
-
-void ofxComponent::ScrollBar::onDraw() {
-	if (getWidth() <= 0 || getHeight() <= 0) return;
-
-	ofFill();
-	ofSetColor(200, 150);
-	float r = MIN(getWidth(), getHeight()) / 2;
-	ofDrawRectRounded(0, 0, getWidth(), getHeight(), r);
 }

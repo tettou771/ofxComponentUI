@@ -18,6 +18,9 @@ namespace ofxComponent {
         // ofxComponentBase
         void onStart() override;
         void onLocalMatrixChanged() override;
+        
+        // View
+        void onSetContents() override;
 
         // StreatchView
         void setMode(Mode _mode);

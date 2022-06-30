@@ -11,6 +11,7 @@ void View::setContents(shared_ptr<ofxComponentBase> _contents) {
     }
     
     contents = _contents;
+    onSetContents();
     
     // insert before scroll bars
     insertChild(contents, 0);
@@ -43,10 +44,10 @@ Window::Window(string title, ofRectangle _rect)
 	auto withTitleBarRect = _rect;
 	withTitleBarRect.height += titleBarHeight;
 	setRect(withTitleBarRect);
+    setDraggable(true);
 }
 
 void Window::onStart() {
-	setDraggable(true);
 	homeRect = getRect();
 
 	homeButton = make_shared<WindowHomeButton>();
@@ -78,14 +79,16 @@ void Window::postDraw() {
 	ofSetColor(100);
 	ofDrawRectangle(0.5, 0.5, getWidth()-1, getHeight()-1);
 
-	// window scale handle
-	ofPushMatrix();
-	float margin = 4;
-	float size = titleBarHeight - margin * 2;
-	ofTranslate(getWidth() - margin, getHeight() - margin);
-	ofNoFill();
-	ofDrawTriangle(-size, 0, 0, -size, 0, 0);
-	ofPopMatrix();
+	// window resize handle
+    if (resizeEnabled) {
+        ofPushMatrix();
+        float margin = 4;
+        float size = titleBarHeight - margin * 2;
+        ofTranslate(getWidth() - margin, getHeight() - margin);
+        ofNoFill();
+        ofDrawTriangle(-size, 0, 0, -size, 0, 0);
+        ofPopMatrix();
+    }
 }
 
 void Window::onMousePressed(ofMouseEventArgs& mouse) {
@@ -108,7 +111,7 @@ void Window::onMousePressed(ofMouseEventArgs& mouse) {
 		setDragging(false);
 
 		int cornarSize = titleBarHeight;
-		if (getMouseX() > getWidth() - cornarSize && getMouseY() > getHeight() - cornarSize) {
+		if (resizeEnabled && getMouseX() > getWidth() - cornarSize && getMouseY() > getHeight() - cornarSize) {
 			cornarDragging = true;
 
 			// move to most top
@@ -210,11 +213,14 @@ void Window::onHomeButton() {
 void Window::updateViewRect() {
 	if (!view) return;
 
+    // window frame
+    int frameWidth = 1;
+    
 	ofRectangle r;
-	r.x = 0;
-	r.y = titleBarHeight;
-	r.width = getWidth();
-	r.height = getHeight() - titleBarHeight;
+	r.x = frameWidth;
+	r.y = titleBarHeight + frameWidth;
+	r.width = getWidth() - frameWidth * 2;
+	r.height = getHeight() - titleBarHeight - frameWidth * 2;
 	view->setRect(r);
 }
 

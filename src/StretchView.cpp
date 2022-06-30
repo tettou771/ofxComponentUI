@@ -53,6 +53,10 @@ void ofxComponent::StretchView::calcScale() {
     contents->setPos(offset);
 }
 
+void StretchView::onSetContents() {
+    calcScale();
+}
+
 void StretchView::setMode(Mode _mode) {
     mode = _mode;
     calcScale();

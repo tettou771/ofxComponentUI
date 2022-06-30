@@ -34,6 +34,9 @@ namespace ofxComponent {
         void onMouseScrolled(ofMouseEventArgs& mouse) override;
         void onLocalMatrixChanged() override;
 
+        // view
+        void onSetContents() override;
+        
         // ScrollView
         void setScrollSpeed(float _speed);
         float getScrollSpeed() {return speed;}

@@ -9,5 +9,11 @@ namespace ofxComponent {
                 
         // ofxComponentBase
         void onLocalMatrixChanged() override;
+        
+        // View
+        void onSetContents() override;
+        
+    protected:
+        void updateContentsSize();
     };
 }

@@ -10,6 +10,7 @@ namespace ofxComponent {
         void setContents(shared_ptr<ofxComponentBase> _contents);
         shared_ptr<ofxComponentBase> getContents() {return contents;};
         shared_ptr<Window> getParentWindow();
+        virtual void onSetContents() {}
     protected:
         shared_ptr<ofxComponentBase> contents;
     };
@@ -44,6 +45,8 @@ namespace ofxComponent {
         string getTitle() { return title; }
         void setTitleAttribute(string& a) { titleAttribute = a; }
         string getTitleAttribute() { return titleAttribute; }
+        void setResizeEnabled(bool _enabled) {resizeEnabled = _enabled;}
+        bool getResizeEnabled() { return resizeEnabled;}
 
         // align to other window
         enum Align {
@@ -62,6 +65,7 @@ namespace ofxComponent {
         string title, titleAttribute;
         shared_ptr<View> view = nullptr;
 
+        bool resizeEnabled = true;
         bool cornarDragging = false;
 
         // initial size
