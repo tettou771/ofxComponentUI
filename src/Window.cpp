@@ -44,7 +44,7 @@ Window::Window(string title, int x, int y, int w, int h) {
 
 Window::Window(string title, ofRectangle _rect)
 	:title(title) {
-    setAppearance(defaultAppearance);
+    appearance = defaultAppearance;
 	auto withTitleBarRect = _rect;
 	withTitleBarRect.height += appearance.titlebarHeight;
 	setRect(withTitleBarRect);
@@ -53,6 +53,7 @@ Window::Window(string title, ofRectangle _rect)
 
 void Window::onStart() {
 	homeRect = getRect();
+    setAppearance(appearance);
 
 	homeButton = make_shared<WindowHomeButton>();
 	ofAddListener(homeButton->clickEvents, this, &Window::onHomeButton);
