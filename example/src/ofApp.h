@@ -5,6 +5,7 @@
 
 using namespace ofxComponent;
 
+// this is custom View component
 class A : public View {
 public:
 	A() {}
@@ -24,6 +25,7 @@ public:
 	}
 };
 
+// this is custom ListElement
 class MyListElement : public ListElement {
 public:
 	MyListElement(string t, ofRectangle r) {
@@ -53,15 +55,19 @@ public:
 		string label = ofToString(getIndex()) + " " + text;
 		ofDrawBitmapString(label, 4, 16);
 	}
+    
+    // This methods makes it draggable
 	void onMouseDragged(ofMouseEventArgs& mouse) override {
 		if (getMoving()) moved = true;
 	}
 	void onMouseReleased(ofMouseEventArgs& mouse) override {
+        // Update list order if it moved by mouse
 		if (moved) {
 			moved = false;
 			getParentBox()->updateList();
 		}
 	}
+    // True if mouse dragged
 	bool moved = false;
 };
 
@@ -72,17 +78,6 @@ class ofApp : public ofBaseApp{
 		void update();
 		void draw();
 
-		void keyPressed(int key);
-		void keyReleased(int key);
-		void mouseMoved(int x, int y );
-		void mouseDragged(int x, int y, int button);
-		void mousePressed(int x, int y, int button);
-		void mouseReleased(int x, int y, int button);
-		void mouseEntered(int x, int y);
-		void mouseExited(int x, int y);
-		void windowResized(int w, int h);
-		void dragEvent(ofDragInfo dragInfo);
-		void gotMessage(ofMessage msg);
-
+        // ofxComponent needs this instance
 		shared_ptr<ofxComponent::ofxComponentManager> componentManager;
 };

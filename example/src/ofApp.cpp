@@ -18,22 +18,30 @@ void ofApp::setup(){
     // a.resizable = false;
     Window::setDefaultAppearance(a);
     
-    // make StretchView (NoCrop) window
+    // Make StretchView (NoCrop) window
     {
+        // Make contents instance
+        // contents is child of view
         auto contents = make_shared<A>();
         contents->setRect(ofRectangle(0, 0, 200, 200));
 
+        // Make view instance
+        // view is child of window
         auto view = make_shared<StretchView>(StretchView::NoCrop);
+        // view has a contents
         view->setContents(contents);
 
-        ofRectangle rect(20, 20, 400, 300);
+        // Make window instance
+        // window is child of componentManager
+        ofRectangle rect(20, 40, 400, 300);
         auto window = make_shared<Window>("Stretch view NoCrop", rect);
+        // window has a view
         window->setView(view);
 
         componentManager->addChild(window);
     }
     
-    // make StretchView (Crop) window
+    // Make StretchView (Crop) window
     {
         auto contents = make_shared<A>();
         contents->setRect(ofRectangle(0, 0, 200, 200));
@@ -41,14 +49,14 @@ void ofApp::setup(){
         auto view = make_shared<StretchView>(StretchView::Crop);
         view->setContents(contents);
 
-        ofRectangle rect(440, 20, 400, 300);
+        ofRectangle rect(440, 40, 400, 300);
         auto window = make_shared<Window>("Stretch view Crop", rect);
         window->setView(view);
 
         componentManager->addChild(window);
     }
 
-    // make Fit window
+    // Make Fit window
     {
         auto contents = make_shared<A>();
         contents->setRect(ofRectangle(0, 0, 600, 400));
@@ -56,14 +64,14 @@ void ofApp::setup(){
         auto view = make_shared<FitView>();
         view->setContents(contents);
 
-        ofRectangle rect(860, 20, 400, 300);
+        ofRectangle rect(860, 40, 400, 300);
         auto window = make_shared<Window>("Fit view", rect);
         window->setView(view);
 
         componentManager->addChild(window);
     }
 
-    // make ScrollView window
+    // Make ScrollView window
     {
         auto contents = make_shared<A>();
         contents->setRect(ofRectangle(0, 0, 600, 400));
@@ -71,14 +79,14 @@ void ofApp::setup(){
         auto view = make_shared<ScrollView>();
         view->setContents(contents);
 
-        ofRectangle rect(20, 360, 400, 300);
+        ofRectangle rect(20, 380, 400, 300);
         auto window = make_shared<Window>("Scroll view", rect);
         window->setView(view);
 
         componentManager->addChild(window);
     }
 
-    // make ScrollView window
+    // Make ScrollView window
     {
         auto contents = make_shared<A>();
         contents->setRect(ofRectangle(0, 0, 600, 800));
@@ -88,14 +96,14 @@ void ofApp::setup(){
         //view->setFitMode(ScrollView::FitHeight);
         view->setFitMode(ScrollView::FitWidth);
 
-        ofRectangle rect(440, 360, 400, 300);
+        ofRectangle rect(440, 380, 400, 300);
         auto window = make_shared<Window>("Scroll view (fit width)", rect);
         window->setView(view);
 
         componentManager->addChild(window);
     }
 
-    // make scroll list view
+    // Make scroll list view
     {
         auto listBox = make_shared<ListBox>();
         listBox->setRect(ofRectangle(0, 0, 600, 400));
@@ -115,7 +123,7 @@ void ofApp::setup(){
         view->setContents(listBox);
         view->setFitMode(ScrollView::FitWidth);
 
-        ofRectangle rect(860, 360, 400, 300);
+        ofRectangle rect(860, 380, 400, 300);
         auto window = make_shared<Window>("Scroll view", rect);
         window->setView(view);
 
@@ -132,60 +140,12 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::keyPressed(int key){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::keyReleased(int key){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y ){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseEntered(int x, int y){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseExited(int x, int y){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::windowResized(int w, int h){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::gotMessage(ofMessage msg){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
-
+    // draw help msg
+    ofPushStyle();
+    ofSetColor(200, 200, 0);
+    ofDrawBitmapString("Move to drag window with titlebar  v", 20, 35);
+    ofDrawBitmapString("Resize to drag right bottom cornar handle  ^", 70, 370);
+    ofDrawBitmapString("Scroll to use mosue wheel  ^\nor drag scroll bars", 20, 710);
+    ofDrawBitmapString("Move list elements to drag  ^\nClass of the elements is \"MyListObject\"\nThat is derived class of \"ListObject\"", 860, 710);
+    ofPopStyle();
 }
