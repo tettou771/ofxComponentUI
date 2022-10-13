@@ -7,3 +7,4 @@
 #include "StretchView.h"
 #include "ListBox.h"
 #include "TextBox.h"
+#include "RightClickMenu.h"
