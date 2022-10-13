@@ -17,6 +17,9 @@ void View::setContents(shared_ptr<ofxComponentBase> _contents) {
     
     // insert before scroll bars
     insertChild(contents, 0);
+    
+    contents->setWidth(getWidth());
+    contents->setHeight(getHeight());
 }
 
 shared_ptr<Window> View::getParentWindow() {
