@@ -106,6 +106,10 @@ void RightClickMenu::onDraw() {
     ofPopStyle();
 }
 
+void RightClickMenu::onDestroy() {
+    singleton = nullptr;
+}
+
 void RightClickMenu::onMousePressed(ofMouseEventArgs &mouse) {
     // If target is already destroyed, ignore
     if (!target || target->isDestroyed()) {
@@ -140,9 +144,11 @@ void RightClickMenu::onMousePressed(ofMouseEventArgs &mouse) {
                     destroy();
                     return;
                 }
+                y += listHeight;
             }
             y += bordarHeight;
         }
     }
-    // not clicked
+
+    ofLog() << "Clicked, but here is no element.";
 }

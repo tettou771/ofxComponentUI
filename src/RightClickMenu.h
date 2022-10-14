@@ -26,6 +26,7 @@ namespace ofxComponent {
         
         void onStart() override;
         void onDraw() override;
+        void onDestroy() override;
         void onMousePressed(ofMouseEventArgs& mouse) override;
 
         static void makeMenu(RightClickMenuSettings &settings);
