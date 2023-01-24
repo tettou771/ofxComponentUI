@@ -81,7 +81,16 @@ void TextBox::updateTextBox() {
     }
     if (maxLines < lineCount) {
         for (int i = maxLines; i < lineCount; ++i) {
-            pop();
+            // delete oldest text
+            int appear = text.find_first_of('\n');
+            
+            // if no LF, erase all
+            if (appear == 0) {
+                text = "";
+            }
+            else {
+                text = text.substr(appear + 1, text.length() - appear - 1);
+            }
         }
         lineCount = maxLines;
     }
