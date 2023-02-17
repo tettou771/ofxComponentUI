@@ -125,10 +125,10 @@ void RightClickMenu::onMousePressed(ofMouseEventArgs &mouse) {
 
     RightClickMenuEventArgs args;
     
-    // out of range, canceled
-    if (!isMouseInside()) {
+    // didn't touched, cancel
+    if (!isTopComponent()) {
         args.canceled = true;
-        receivableTarget->onRightClickMenuClicked(args);
+        receivableTarget->onMenuClicked(args);
         destroy();
         return;
     } else {
@@ -140,7 +140,7 @@ void RightClickMenu::onMousePressed(ofMouseEventArgs &mouse) {
                 if (y <= my && my < y + listHeight) {
                     args.canceled = false;
                     args.selected = element;
-                    receivableTarget->onRightClickMenuClicked(args);
+                    receivableTarget->onMenuClicked(args);
                     destroy();
                     return;
                 }

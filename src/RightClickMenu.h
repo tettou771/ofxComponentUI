@@ -9,7 +9,7 @@ namespace ofxComponent {
 
     class RightClickMenuReceiver {
     public:
-        virtual void onRightClickMenuClicked(RightClickMenuEventArgs &args){};
+        virtual void onMenuClicked(RightClickMenuEventArgs &args){};
     };
 
     struct RightClickMenuSettings {

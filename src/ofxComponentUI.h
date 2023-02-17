@@ -1,5 +1,6 @@
 #pragma once
 #include "Button.h"
+#include "ClickableComponent.h"
 #include "ToggleButton.h"
 #include "Window.h"
 #include "ScrollView.h"
