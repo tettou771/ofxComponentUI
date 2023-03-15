@@ -6,14 +6,14 @@ StretchView::StretchView(){}
 StretchView::StretchView(Mode mode):mode(mode){}
 
 void ofxComponent::StretchView::onStart() {
-    calcScale();
+    updateContentsSize();
 }
 
 void StretchView::onLocalMatrixChanged() {
-    calcScale();
+    updateContentsSize();
 }
 
-void ofxComponent::StretchView::calcScale() {
+void StretchView::updateContentsSize() {
     if (!contents) return;
 
     float widthScale = getWidth() / contents->getWidth();
@@ -54,10 +54,10 @@ void ofxComponent::StretchView::calcScale() {
 }
 
 void StretchView::onSetContents() {
-    calcScale();
+    updateContentsSize();
 }
 
 void StretchView::setMode(Mode _mode) {
     mode = _mode;
-    calcScale();
+    updateContentsSize();
 }

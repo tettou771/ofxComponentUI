@@ -4,6 +4,10 @@ using namespace ofxComponent;
 
 FitView::FitView(){}
 
+void FitView::onStart() {
+    updateContentsSize();
+}
+
 void FitView::onLocalMatrixChanged() {
     updateContentsSize();
 }

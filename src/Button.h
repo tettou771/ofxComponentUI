@@ -1,9 +1,8 @@
 #pragma once
 #include "ofxComponent.h"
-#include "ClickableComponent.h"
 
 namespace ofxComponent {
-class Button : public ClickableComponent {
+class Button : public ofxComponentBase {
 public:
     Button();
     

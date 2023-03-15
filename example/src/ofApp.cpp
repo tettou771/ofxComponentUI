@@ -22,7 +22,7 @@ void ofApp::setup(){
     {
         // Make contents instance
         // contents is child of view
-        auto contents = make_shared<A>();
+        auto contents = make_shared<TestPatternView>();
         contents->setRect(ofRectangle(0, 0, 200, 200));
 
         // Make view instance
@@ -43,7 +43,7 @@ void ofApp::setup(){
     
     // Make StretchView (Crop) window
     {
-        auto contents = make_shared<A>();
+        auto contents = make_shared<TestPatternView>();
         contents->setRect(ofRectangle(0, 0, 200, 200));
 
         auto view = make_shared<StretchView>(StretchView::Crop);
@@ -58,7 +58,7 @@ void ofApp::setup(){
 
     // Make Fit window
     {
-        auto contents = make_shared<A>();
+        auto contents = make_shared<TestPatternView>();
         contents->setRect(ofRectangle(0, 0, 600, 400));
 
         auto view = make_shared<FitView>();
@@ -73,7 +73,7 @@ void ofApp::setup(){
 
     // Make ScrollView window
     {
-        auto contents = make_shared<A>();
+        auto contents = make_shared<TestPatternView>();
         contents->setRect(ofRectangle(0, 0, 600, 400));
 
         auto view = make_shared<ScrollView>();
@@ -88,7 +88,7 @@ void ofApp::setup(){
 
     // Make ScrollView window
     {
-        auto contents = make_shared<A>();
+        auto contents = make_shared<TestPatternView>();
         contents->setRect(ofRectangle(0, 0, 600, 800));
 
         auto view = make_shared<ScrollView>();
@@ -116,7 +116,7 @@ void ofApp::setup(){
         for (int i = 0; i < 20; ++i) {
             string text = "element ";
             text += char(i + 'A');
-            listBox->addElement(make_shared<MyListElement>(text, ofRectangle(0, 0, 200, 30)));
+            listBox->addElement(make_shared<MyListElement>(text, ofRectangle(0, 0, 200, 28)));
         }
 
         auto view = make_shared<ScrollView>();

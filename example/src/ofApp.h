@@ -6,9 +6,16 @@
 using namespace ofxComponent;
 
 // this is custom View component
-class A : public View {
+class TestPatternView : public View {
 public:
-	A() {}
+	TestPatternView() {}
+    void onSetup() override {
+        // Sets the default size.
+        // If the view setting is FitView, ScrollView, the size may be automatically changed accordingly
+        setWidth(600);
+        setHeight(600);
+    }
+    
 	void onDraw() override {
 		// fill myself
 		ofSetColor(0, 40, 100);

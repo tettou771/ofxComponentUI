@@ -20,8 +20,10 @@ ScrollView::ScrollView() {
 }
 
 ScrollView::ScrollView(FitMode _mode) {
-    ScrollView();
     setFitMode(_mode);
+    speed = 10;
+    barHDragging = barVDragging = false;
+    setConstrain(true);
 }
 
 void ScrollView::onStart() {

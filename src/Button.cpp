@@ -6,8 +6,8 @@ Button::Button() {
 }
 
 void Button::onDraw() {
-    if (isMostFront()) {
-        if (mousePressing) onDrawPressed();
+    if (isMouseOver()) {
+        if (isMousePressedOverComponent()) onDrawPressed();
         else onDrawHovered();
     }
     else {

@@ -28,6 +28,6 @@ namespace ofxComponent {
 
     private:
         Mode mode;
-        void calcScale();
+        void updateContentsSize();
     };
 }

@@ -2,22 +2,14 @@
 #include "ofxComponent.h"
 
 namespace ofxComponent {
-    struct RightClickMenuEventArgs {
-        bool canceled = false;
-        string selected = "";
-    };
-
-    class RightClickMenuReceiver {
-    public:
-        virtual void onMenuClicked(RightClickMenuEventArgs &args){};
-    };
+struct RightClickMenuElement {
+    string name;
+    int shotrcutKey;
+    function<void()> event;
+};
 
     struct RightClickMenuSettings {
-        shared_ptr<ofxComponentBase> target;
-        
-        // vector in vector
-        // list is separated with bordar
-        vector<vector<string> > list;
+        vector<RightClickMenuElement> list;
     };
 
     class RightClickMenu : public ofxComponentBase {
@@ -26,9 +18,11 @@ namespace ofxComponent {
         
         void onStart() override;
         void onDraw() override;
+        void onUpdate() override;
         void onDestroy() override;
         void onMousePressed(ofMouseEventArgs& mouse) override;
 
+        // make menu. if it exists, add menu
         static void makeMenu(RightClickMenuSettings &settings);
         static void makeMenu(RightClickMenuSettings &settings, int x, int y);
 
@@ -38,7 +32,10 @@ namespace ofxComponent {
         static const int bordarHeight = 10;
         static const int listHeight = 16;
         
-        shared_ptr<ofxComponentBase> target = nullptr;
-        vector<vector<string> > list;
+        // list of list
+        // between list and list is separated
+        vector<vector<RightClickMenuElement> > metaList;
+        
+        bool ignoreThisFrame = true;
     };
 }

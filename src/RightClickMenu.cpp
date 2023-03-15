@@ -15,47 +15,37 @@ void RightClickMenu::makeMenu(RightClickMenuSettings &settings) {
 }
 
 void RightClickMenu::makeMenu(RightClickMenuSettings &settings, int x, int y) {
-    if (settings.target == nullptr) {
-        ofLogError() << "Error: RightClickMenu needs target, but this is nullptr";
-    }
+    // if menu exists, not make and add
+    bool addMenu = false;
     
-    makeSingleton();
-    singleton->target = settings.target;
+    if (singleton == nullptr || singleton->isDestroyed()) {
+        makeSingleton();
+    }else{
+        addMenu = true;
+    }
     
     // ignore this frame input
-    // reenable in onStart()
-    singleton->setKeyMouseEventEnabled(false);
-
-    // find master manager
-    shared_ptr<ofxComponentBase> t;
-    t = settings.target;
-    bool founded = false;
-    while (true) {
-        if (dynamic_pointer_cast<ofxComponentManager>(t) != nullptr) {
-            founded = true;
-            break;
-        } else {
-            t = t->getParent();
-            if (t == nullptr) break;
-        }
-    }
+    singleton->ignoreThisFrame = true;
     
     // make menu
-    if (founded) {
+    if (ofxComponentManager::singleton) {
         // controll with manager
-        t->addChild(singleton);
+        ofxComponentManager::singleton->addChild(singleton);
         
         int w = 200; // menu width
         int h = 0; // height fit to list
 
-        singleton->list = settings.list;
-        for (auto l : singleton->list) {
+        singleton->metaList.push_back(settings.list);
+        
+        // check height
+        for (auto l : singleton->metaList) {
             for (auto element : l) {
                 h += listHeight;
             }
             h += bordarHeight;
         }
-
+        
+        // if add menu, don't move the menu
         singleton->setRect(ofRectangle(x, y, w, h));
     }
     // can not make menu
@@ -66,6 +56,13 @@ void RightClickMenu::makeMenu(RightClickMenuSettings &settings, int x, int y) {
 
 void RightClickMenu::onStart() {
     setKeyMouseEventEnabled(true);
+}
+
+void RightClickMenu::onUpdate() {
+    if (ignoreThisFrame) {
+        ignoreThisFrame = false;
+        return;
+    }
 }
 
 void RightClickMenu::onDraw() {
@@ -82,7 +79,7 @@ void RightClickMenu::onDraw() {
     ofSetColor(50);
     ofDrawRectangle(0, 0, getWidth(), getHeight());
     
-    for (auto l : singleton->list) {
+    for (auto l : singleton->metaList) {
         for (auto element : l) {
             // if mouse hover, highlight
             if (0 <= mx && mx < getWidth()) {
@@ -96,7 +93,7 @@ void RightClickMenu::onDraw() {
             
             ofSetColor(255);
             int fontHeight = 13.5;
-            ofDrawBitmapString(element, 2, y + (fontHeight + listHeight) / 2);
+            ofDrawBitmapString(element.name, 2, y + (fontHeight + listHeight) / 2);
             y += listHeight;
         }
         y += bordarHeight;
@@ -111,36 +108,21 @@ void RightClickMenu::onDestroy() {
 }
 
 void RightClickMenu::onMousePressed(ofMouseEventArgs &mouse) {
-    // If target is already destroyed, ignore
-    if (!target || target->isDestroyed()) {
-        destroy();
-        return;
-    }
-
-    auto receivableTarget = dynamic_pointer_cast<RightClickMenuReceiver>(target);
-    if (!receivableTarget) {
-        destroy();
-        return;
-    }
-
-    RightClickMenuEventArgs args;
+    if (ignoreThisFrame) return;
     
     // didn't touched, cancel
     if (!isTopComponent()) {
-        args.canceled = true;
-        receivableTarget->onMenuClicked(args);
         destroy();
         return;
     } else {
         int y = 0;
         int my = getMouseY();
-        for (auto l : singleton->list) {
+        for (auto l : singleton->metaList) {
             for (auto element : l) {
                 // if mouse hover, highlight
                 if (y <= my && my < y + listHeight) {
-                    args.canceled = false;
-                    args.selected = element;
-                    receivableTarget->onMenuClicked(args);
+                    ofLogVerbose("RightClickMenu") << element.name << " is selected";
+                    element.event();
                     destroy();
                     return;
                 }
@@ -150,5 +132,5 @@ void RightClickMenu::onMousePressed(ofMouseEventArgs &mouse) {
         }
     }
 
-    ofLog() << "Clicked, but here is no element.";
+    ofLogVerbose("RightClickMenu") << "Clicked, but here is no element.";
 }
