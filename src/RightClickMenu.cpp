@@ -111,7 +111,7 @@ void RightClickMenu::onMousePressed(ofMouseEventArgs &mouse) {
     if (ignoreThisFrame) return;
     
     // didn't touched, cancel
-    if (!isTopComponent()) {
+    if (!isMouseOver()) {
         destroy();
         return;
     } else {
