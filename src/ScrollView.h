@@ -44,10 +44,11 @@ namespace ofxComponent {
         void setFitMode(FitMode _mode);
         FitMode getFitMode() { return fitMode; }
         
-    private:
         // scroll bar
         void scrollX(float x);
         void scrollY(float y);
+        
+    private:
         void updateScrollBar();
         shared_ptr<ScrollBar> barV, barH;
         bool barVDragging, barHDragging;
