@@ -13,6 +13,16 @@ void StretchView::onLocalMatrixChanged() {
     updateContentsSize();
 }
 
+void ofxComponent::StretchView::onDestroy() {
+    if (onContentsLocalMatrixChangedResistored) {
+        ofRemoveListener(contents->localMatrixChangedEvents, this, &StretchView::onContentsLocalMatrixChanged);
+    }
+}
+
+void ofxComponent::StretchView::onContentsLocalMatrixChanged() {
+    updateContentsSize();
+}
+
 void StretchView::updateContentsSize() {
     if (!contents) return;
 
@@ -54,6 +64,8 @@ void StretchView::updateContentsSize() {
 }
 
 void StretchView::onSetContents() {
+    ofAddListener(contents->localMatrixChangedEvents, this, &StretchView::onContentsLocalMatrixChanged);
+    onContentsLocalMatrixChangedResistored = true;
     updateContentsSize();
 }
 

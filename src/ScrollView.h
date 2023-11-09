@@ -33,6 +33,10 @@ namespace ofxComponent {
         void onMouseReleased(ofMouseEventArgs& mosue) override;
         void onMouseScrolled(ofMouseEventArgs& mouse) override;
         void onLocalMatrixChanged() override;
+        void onDestroy() override;
+
+        // hanlder
+        void onContentsLocalMatrixChanged();
 
         // view
         void onSetContents() override;
@@ -57,5 +61,6 @@ namespace ofxComponent {
         float speed;
 
         FitMode fitMode;
+        bool onContentsLocalMatrixChangedResistored = false;
     };
 }

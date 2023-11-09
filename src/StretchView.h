@@ -18,6 +18,10 @@ namespace ofxComponent {
         // ofxComponentBase
         void onStart() override;
         void onLocalMatrixChanged() override;
+        void onDestroy() override;
+
+        // hanlder
+        void onContentsLocalMatrixChanged();
         
         // View
         void onSetContents() override;
@@ -29,5 +33,6 @@ namespace ofxComponent {
     private:
         Mode mode;
         void updateContentsSize();
+        bool onContentsLocalMatrixChangedResistored = false;
     };
 }

@@ -10,11 +10,16 @@ namespace ofxComponent {
         // ofxComponentBase
         void onStart();
         void onLocalMatrixChanged() override;
+        void onDestroy() override;
+
+        // hanlder
+        void onContentsLocalMatrixChanged();
         
         // View
         void onSetContents() override;
         
     protected:
         void updateContentsSize();
+        bool onContentsLocalMatrixChangedResistored = false;
     };
 }

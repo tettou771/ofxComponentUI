@@ -12,7 +12,19 @@ void FitView::onLocalMatrixChanged() {
     updateContentsSize();
 }
 
+void ofxComponent::FitView::onDestroy() {
+    if (onContentsLocalMatrixChangedResistored) {
+        ofRemoveListener(contents->localMatrixChangedEvents, this, &FitView::onContentsLocalMatrixChanged);
+    }
+}
+
+void ofxComponent::FitView::onContentsLocalMatrixChanged() {
+    updateContentsSize();
+}
+
 void FitView::onSetContents() {
+    ofAddListener(contents->localMatrixChangedEvents, this, &FitView::onContentsLocalMatrixChanged);
+    onContentsLocalMatrixChangedResistored = true;
     updateContentsSize();
 }
 

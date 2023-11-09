@@ -102,8 +102,20 @@ void ScrollView::onLocalMatrixChanged() {
 	updateScrollBar();
 }
 
+void ofxComponent::ScrollView::onDestroy() {
+	if (onContentsLocalMatrixChangedResistored) {
+		ofRemoveListener(contents->localMatrixChangedEvents, this, &ScrollView::onContentsLocalMatrixChanged);
+	}
+}
+
+void ofxComponent::ScrollView::onContentsLocalMatrixChanged() {
+	onLocalMatrixChanged();
+}
+
 void ScrollView::onSetContents() {
-    onLocalMatrixChanged();
+	ofAddListener(contents->localMatrixChangedEvents, this, &ScrollView::onContentsLocalMatrixChanged);
+	onContentsLocalMatrixChangedResistored = true;
+	onLocalMatrixChanged();
 }
 
 void ofxComponent::ScrollView::setScrollSpeed(float _speed) {
