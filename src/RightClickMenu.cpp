@@ -15,13 +15,12 @@ void RightClickMenu::makeMenu(RightClickMenuSettings &settings) {
 }
 
 void RightClickMenu::makeMenu(RightClickMenuSettings &settings, int x, int y) {
-    // if menu exists, not make and add
-    bool addMenu = false;
-    
     if (singleton == nullptr || singleton->isDestroyed()) {
         makeSingleton();
-    }else{
-        addMenu = true;
+    }
+    else if (!singleton->ignoreThisFrame) {
+        // clear menu
+        singleton->metaList.clear();
     }
     
     // ignore this frame input
@@ -37,12 +36,17 @@ void RightClickMenu::makeMenu(RightClickMenuSettings &settings, int x, int y) {
 
         singleton->metaList.push_back(settings.list);
         
-        // check height
-        for (auto l : singleton->metaList) {
+        auto& metaList = singleton->metaList;
+
+        for (auto it = metaList.begin(); it != metaList.end(); ++it) {
+            auto& l = *it;
             for (auto element : l) {
                 h += listHeight;
             }
-            h += bordarHeight;
+            // 最後の要素でなければ、borderHeightを加算
+            if (std::next(it) != metaList.end()) {
+                h += borderHeight;
+            }
         }
         
         // if add menu, don't move the menu
@@ -96,7 +100,7 @@ void RightClickMenu::onDraw() {
             ofDrawBitmapString(element.name, 2, y + (fontHeight + listHeight) / 2);
             y += listHeight;
         }
-        y += bordarHeight;
+        y += borderHeight;
     }
     
     ofPopMatrix();
@@ -128,7 +132,7 @@ void RightClickMenu::onMousePressed(ofMouseEventArgs &mouse) {
                 }
                 y += listHeight;
             }
-            y += bordarHeight;
+            y += borderHeight;
         }
     }
 

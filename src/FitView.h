@@ -8,7 +8,7 @@ namespace ofxComponent {
         FitView();
                 
         // ofxComponentBase
-        void onStart();
+        void onStart() override;
         void onLocalMatrixChanged() override;
         void onDestroy() override;
 

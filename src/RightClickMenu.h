@@ -2,11 +2,11 @@
 #include "ofxComponent.h"
 
 namespace ofxComponent {
-struct RightClickMenuElement {
-    string name;
-    int shotrcutKey;
-    function<void()> event;
-};
+    struct RightClickMenuElement {
+        string name;
+        int shotrcutKey;
+        function<void()> event;
+    };
 
     struct RightClickMenuSettings {
         vector<RightClickMenuElement> list;
@@ -29,7 +29,7 @@ struct RightClickMenuElement {
     private:
         static shared_ptr<RightClickMenu> singleton;
         static void makeSingleton();
-        static const int bordarHeight = 10;
+        static const int borderHeight = 10;
         static const int listHeight = 16;
         
         // list of list

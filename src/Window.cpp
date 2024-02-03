@@ -151,7 +151,7 @@ void Window::onMouseReleased(ofMouseEventArgs& mouse) {
 void Window::onLocalMatrixChanged() {
     updateViewRect();
 
-	if (homeButton) {
+	if (homeButton && getMovable()) {
 		float margin = 4;
 		homeButton->setRect(ofRectangle(getWidth() - appearance.titlebarHeight + margin, margin, appearance.titlebarHeight - margin * 2, appearance.titlebarHeight - margin * 2));
 		homeButton->setActive(getRect() != homeRect);

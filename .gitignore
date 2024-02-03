@@ -3,3 +3,6 @@ example/*
 !example/addons.make
 !example/screenshot.png
 addons
+
+# macos
+.DS_Store
