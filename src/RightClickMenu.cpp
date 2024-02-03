@@ -48,9 +48,16 @@ void RightClickMenu::makeMenu(RightClickMenuSettings &settings, int x, int y) {
                 h += borderHeight;
             }
         }
+
+        ofRectangle rect = ofRectangle(x, y, w, h);
         
-        // if add menu, don't move the menu
-        singleton->setRect(ofRectangle(x, y, w, h));
+        // if out of screen, move to in the screen
+        if (rect.x < 0) rect.x = 0;
+        if (rect.y < 0) rect.y = 0;
+        if (rect.x + rect.width > ofGetWidth()) rect.x = ofGetWidth() - rect.width;
+        if (rect.y + rect.height > ofGetHeight()) rect.y = ofGetHeight() - rect.height;
+        
+        singleton->setRect(rect);
     }
     // can not make menu
     else {

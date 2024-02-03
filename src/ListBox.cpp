@@ -36,15 +36,15 @@ shared_ptr<ListElement> ofxComponent::ListElement::getNext() {
 }
 
 void ListElement::moveUp() {
-	shared_ptr<ListBox> p;
-	if (p = getParentBox()) {
+	shared_ptr<ListBox> p = getParentBox();
+	if (p) {
 		p->insertElement(static_pointer_cast<ListElement>(shared_from_this()), index - 1);
 	}
 }
 
 void ListElement::moveDown() {
-	shared_ptr<ListBox> p;
-	if (p = getParentBox()) {
+	shared_ptr<ListBox> p = getParentBox();
+	if (p) {
 		p->insertElement(static_pointer_cast<ListElement>(shared_from_this()), index + 1);
 	}
 }
