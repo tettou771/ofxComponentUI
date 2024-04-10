@@ -57,7 +57,7 @@ namespace ofxComponent {
         void onLocalMatrixChanged() override;
 
         // window
-        void setTitle(string& t) { title = t; }
+        void setTitle(const string& t) { title = t; }
         string getTitle() { return title; }
         void setResizable(bool _resizable) {appearance.resizable = _resizable;}
         bool getResizable() { return appearance.resizable;}
