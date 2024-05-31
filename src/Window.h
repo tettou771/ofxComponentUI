@@ -64,6 +64,10 @@ namespace ofxComponent {
         void setAppearance(Appearance a) { appearance = a; setMovable(a.movable);}
         Appearance getAppearance() {return appearance;}
         
+        // set home
+        void setHomeRect(const float& x, const float& y, const float& width, const float& height);
+        void setHomeRect(const ofRectangle rect);
+        
         // set default appearance (setting)
         // to make same appearance window easy
         static void setDefaultAppearance(Appearance a) {defaultAppearance = a;}

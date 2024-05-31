@@ -41,9 +41,8 @@ shared_ptr<Window> View::getParentWindow() {
 }
 
 
-Window::Window(string title, int x, int y, int w, int h) {
-	Window(title, ofRectangle(x, y, w, h));
-}
+Window::Window(string title, int x, int y, int w, int h)
+    :Window(title, ofRectangle(x, y, w, h)) {}
 
 Window::Window(string title, ofRectangle _rect)
 	:title(title) {
@@ -157,6 +156,15 @@ void Window::onLocalMatrixChanged() {
 		homeButton->setActive(getRect() != homeRect);
 	}
 
+}
+
+void Window::setHomeRect(const float& x, const float& y, const float& width, const float& height){
+    setHomeRect(ofRectangle(x, y, width, height));
+}
+
+void Window::setHomeRect(const ofRectangle rect) {
+    homeRect = rect;
+    setRect(rect);
 }
 
 void Window::alignTo(Align direction, shared_ptr<Window> other) {
