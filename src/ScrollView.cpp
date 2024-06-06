@@ -75,6 +75,7 @@ void ScrollView::onMouseReleased(ofMouseEventArgs& mosue) {
 }
 
 void ScrollView::onMouseScrolled(ofMouseEventArgs& mouse) {
+    if (!isMouseInside()) return;
 	if (fitMode == FitHeight) {
 		// if this only have horizontal scroll, mouse wheel is horizontal
 		scrollX(mouse.scrollY * speed);

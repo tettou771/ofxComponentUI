@@ -7,7 +7,7 @@ void ofApp::setup(){
 	auto componentManager = make_shared<ofxComponentManager>();
 
     // let's try change window appearance
-    auto a = Window::getDefaultAppearance();
+    auto a = WindowComponent::getDefaultAppearance();
     // a.titleColor = ofColor(255,255,0);
     // a.titlebarColor = ofColor(0, 50, 100);
     // a.outlineColor = ofColor(200, 0, 0);
@@ -16,7 +16,7 @@ void ofApp::setup(){
     // a.cornarHandle = 50;
     // a.movable = false;
     // a.resizable = false;
-    Window::setDefaultAppearance(a);
+    WindowComponent::setDefaultAppearance(a);
     
     // Make StretchView (NoCrop) window
     {
@@ -34,7 +34,7 @@ void ofApp::setup(){
         // Make window instance
         // window is child of componentManager
         ofRectangle rect(20, 40, 400, 300);
-        auto window = make_shared<Window>("Stretch view NoCrop", rect);
+        auto window = make_shared<WindowComponent>("Stretch view NoCrop", rect);
         // window has a view
         window->setView(view);
 
@@ -50,7 +50,7 @@ void ofApp::setup(){
         view->setContents(contents);
 
         ofRectangle rect(440, 40, 400, 300);
-        auto window = make_shared<Window>("Stretch view Crop", rect);
+        auto window = make_shared<WindowComponent>("Stretch view Crop", rect);
         window->setView(view);
 
         componentManager->addChild(window);
@@ -65,7 +65,7 @@ void ofApp::setup(){
         view->setContents(contents);
 
         ofRectangle rect(860, 40, 400, 300);
-        auto window = make_shared<Window>("Fit view", rect);
+        auto window = make_shared<WindowComponent>("Fit view", rect);
         window->setView(view);
 
         componentManager->addChild(window);
@@ -80,7 +80,7 @@ void ofApp::setup(){
         view->setContents(contents);
 
         ofRectangle rect(20, 380, 400, 300);
-        auto window = make_shared<Window>("Scroll view", rect);
+        auto window = make_shared<WindowComponent>("Scroll view", rect);
         window->setView(view);
 
         componentManager->addChild(window);
@@ -97,7 +97,7 @@ void ofApp::setup(){
         view->setFitMode(ScrollView::FitWidth);
 
         ofRectangle rect(440, 380, 400, 300);
-        auto window = make_shared<Window>("Scroll view (fit width)", rect);
+        auto window = make_shared<WindowComponent>("Scroll view (fit width)", rect);
         window->setView(view);
 
         componentManager->addChild(window);
@@ -124,7 +124,7 @@ void ofApp::setup(){
         view->setFitMode(ScrollView::FitWidth);
 
         ofRectangle rect(860, 380, 400, 300);
-        auto window = make_shared<Window>("Scroll view", rect);
+        auto window = make_shared<WindowComponent>("Scroll view", rect);
         window->setView(view);
 
         componentManager->addChild(window);
