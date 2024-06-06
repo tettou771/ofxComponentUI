@@ -1,6 +1,6 @@
 #pragma once
 #include "ofxComponent.h"
-#include "Window.h"
+#include "WindowComponent.h"
 
 namespace ofxComponent {
     class StretchView : public View {

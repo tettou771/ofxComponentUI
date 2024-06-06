@@ -1,8 +1,8 @@
-#include "Window.h"
+#include "WindowComponent.h"
 
 using namespace ofxComponent;
 
-Window::Appearance Window::defaultAppearance;
+WindowComponent::Appearance WindowComponent::defaultAppearance;
 
 void View::setContents(shared_ptr<ofxComponentBase> _contents) {
     if (!_contents) return;
@@ -22,14 +22,14 @@ void View::setContents(shared_ptr<ofxComponentBase> _contents) {
     contents->setHeight(getHeight());
 }
 
-shared_ptr<Window> View::getParentWindow() {
-	shared_ptr<Window> w = nullptr;
+shared_ptr<WindowComponent> View::getParentWindow() {
+	shared_ptr<WindowComponent> w = nullptr;
 	auto child = static_pointer_cast<ofxComponentBase>(shared_from_this());
 	while(true) {
 		auto p = child->getParent();
 		if (!p) return nullptr;
 
-		auto w = dynamic_pointer_cast<Window>(p);
+		auto w = dynamic_pointer_cast<WindowComponent>(p);
 		if (w) {
 			return w;
 		} else {
@@ -41,10 +41,10 @@ shared_ptr<Window> View::getParentWindow() {
 }
 
 
-Window::Window(string title, int x, int y, int w, int h)
-    :Window(title, ofRectangle(x, y, w, h)) {}
+WindowComponent::WindowComponent(string title, int x, int y, int w, int h)
+    :WindowComponent(title, ofRectangle(x, y, w, h)) {}
 
-Window::Window(string title, ofRectangle _rect)
+WindowComponent::WindowComponent(string title, ofRectangle _rect)
 	:title(title) {
     appearance = defaultAppearance;
 	auto withTitleBarRect = _rect;
@@ -53,19 +53,19 @@ Window::Window(string title, ofRectangle _rect)
     setMovable(true);
 }
 
-void Window::onStart() {
+void WindowComponent::onStart() {
 	homeRect = getRect();
     setAppearance(appearance);
 
 	homeButton = make_shared<WindowHomeButton>();
-	ofAddListener(homeButton->clickEvents, this, &Window::onHomeButton);
+	ofAddListener(homeButton->clickEvents, this, &WindowComponent::onHomeButton);
 	addChild(homeButton);
 
     updateViewRect();
 }
 
 // draw before children
-void Window::onDraw() {
+void WindowComponent::onDraw() {
     // background
     ofFill();
     ofSetColor(appearance.bgColor);
@@ -79,7 +79,7 @@ void Window::onDraw() {
 }
 
 // draw after children
-void Window::postDraw() {
+void WindowComponent::postDraw() {
 	// window outline
 	ofNoFill();
 	ofSetColor(appearance.outlineColor);
@@ -96,7 +96,7 @@ void Window::postDraw() {
     }
 }
 
-void Window::onMousePressed(ofMouseEventArgs& mouse) {
+void WindowComponent::onMousePressed(ofMouseEventArgs& mouse) {
 	cornarDragging = false;
 
 	if (!isMouseInside()) return;
@@ -128,7 +128,7 @@ void Window::onMousePressed(ofMouseEventArgs& mouse) {
 	}
 }
 
-void Window::onMouseDragged(ofMouseEventArgs& mouse) {
+void WindowComponent::onMouseDragged(ofMouseEventArgs& mouse) {
 	if (cornarDragging) {
 		auto move = getMousePos() - getPreviousMousePos();
         float minSize = 20;
@@ -143,11 +143,11 @@ void Window::onMouseDragged(ofMouseEventArgs& mouse) {
     }
 }
 
-void Window::onMouseReleased(ofMouseEventArgs& mouse) {
+void WindowComponent::onMouseReleased(ofMouseEventArgs& mouse) {
 	cornarDragging = false;
 }
 
-void Window::onLocalMatrixChanged() {
+void WindowComponent::onLocalMatrixChanged() {
     updateViewRect();
 
 	if (homeButton && getMovable()) {
@@ -158,16 +158,16 @@ void Window::onLocalMatrixChanged() {
 
 }
 
-void Window::setHomeRect(const float& x, const float& y, const float& width, const float& height){
+void WindowComponent::setHomeRect(const float& x, const float& y, const float& width, const float& height){
     setHomeRect(ofRectangle(x, y, width, height));
 }
 
-void Window::setHomeRect(const ofRectangle rect) {
+void WindowComponent::setHomeRect(const ofRectangle rect) {
     homeRect = rect;
     setRect(rect);
 }
 
-void Window::alignTo(Align direction, shared_ptr<Window> other) {
+void WindowComponent::alignTo(Align direction, shared_ptr<WindowComponent> other) {
 	if (!other) return;
 	auto otherRect = other->getRect();
 	ofVec2f p;
@@ -194,7 +194,7 @@ void Window::alignTo(Align direction, shared_ptr<Window> other) {
 	setPos(p);
 }
 
-shared_ptr<View> Window::setView(shared_ptr<View> _view) {
+shared_ptr<View> WindowComponent::setView(shared_ptr<View> _view) {
     // if nullptr
     if (!_view) {
         // remove view
@@ -218,13 +218,13 @@ shared_ptr<View> Window::setView(shared_ptr<View> _view) {
     return view;
 }
 
-void Window::onHomeButton() {
+void WindowComponent::onHomeButton() {
 	// move to home position
 	setRect(homeRect);
 	setMoving(false);
 }
 
-void Window::updateViewRect() {
+void WindowComponent::updateViewRect() {
 	if (!view) return;
 
     // window frame
