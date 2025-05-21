@@ -99,7 +99,7 @@ void WindowComponent::postDraw() {
 void WindowComponent::onMousePressed(ofMouseEventArgs& mouse) {
 	cornarDragging = false;
 
-	if (!isMouseInside()) return;
+    if (!isMouseOver()) return;
 
 	// in titlebar
 	// grab titlebar
@@ -244,8 +244,6 @@ void WindowHomeButton::onDraw() {
 	ofDrawRectangle(0, 0, getWidth(), getHeight());
 }
 
-void WindowHomeButton::onMousePressed(ofMouseEventArgs& mouse) {
-	if (isMouseInside()) {
-		ofNotifyEvent(clickEvents);
-	}
+void WindowHomeButton::onMousePressedOverComponent(ofMouseEventArgs& mouse) {
+    ofNotifyEvent(clickEvents);
 }

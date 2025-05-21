@@ -18,7 +18,7 @@ namespace ofxComponent {
     class WindowHomeButton : public ofxComponentBase {
     public:
         void onDraw() override;
-        void onMousePressed(ofMouseEventArgs& mouse) override;
+        void onMousePressedOverComponent(ofMouseEventArgs& mouse) override;
         ofEvent<void> clickEvents;
     };
 
