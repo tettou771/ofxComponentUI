@@ -34,14 +34,6 @@ void ScrollView::onStart() {
     onLocalMatrixChanged();
 }
 
-void ScrollView::onUpdate() {
-
-}
-
-void ScrollView::onDraw() {
-
-}
-
 void ScrollView::onMouseMoved(ofMouseEventArgs& mosue) {}
 void ScrollView::onMousePressed(ofMouseEventArgs& mosue) {
 	if (!barH || !barV) return;

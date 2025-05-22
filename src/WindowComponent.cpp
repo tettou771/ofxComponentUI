@@ -4,6 +4,11 @@ using namespace ofxComponent;
 
 WindowComponent::Appearance WindowComponent::defaultAppearance;
 
+void View::onDraw() {
+    if (bgColor.a == 0) return;
+    ofClear(bgColor);
+}
+
 void View::setContents(shared_ptr<ofxComponentBase> _contents) {
     if (!_contents) return;
     

@@ -7,12 +7,17 @@ namespace ofxComponent {
     class View : public ofxComponentBase {
     public:
         View(){setConstrain(true);}
+        void onDraw() override;
         void setContents(shared_ptr<ofxComponentBase> _contents);
         shared_ptr<ofxComponentBase> getContents() {return contents;};
         shared_ptr<WindowComponent> getParentWindow();
         virtual void onSetContents() {}
+        
+        void setBgColor(ofColor c){bgColor = c;};
+        ofColor getBgColor(){return bgColor;}
     protected:
         shared_ptr<ofxComponentBase> contents;
+        ofColor bgColor = ofColor(0, 0, 0, 0);
     };
 
     class WindowHomeButton : public ofxComponentBase {

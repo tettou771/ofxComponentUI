@@ -25,8 +25,6 @@ namespace ofxComponent {
 
         // ofxComponentBase
         void onStart() override;
-        void onUpdate() override;
-        void onDraw() override;
         void onMouseMoved(ofMouseEventArgs& mosue) override;
         void onMousePressed(ofMouseEventArgs& mosue) override;
         void onMouseDragged(ofMouseEventArgs& mosue) override;
