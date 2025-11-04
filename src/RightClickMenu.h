@@ -5,7 +5,7 @@ namespace ofxComponent {
     struct RightClickMenuElement {
         string name;
         int shotrcutKey;
-        function<void()> event;
+        std::function<void()> event;
     };
 
     struct RightClickMenuSettings {
