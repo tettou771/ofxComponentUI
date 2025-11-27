@@ -22,10 +22,17 @@ namespace ofxComponent {
 
     class WindowHomeButton : public ofxComponentBase {
     public:
+		WindowHomeButton(ofColor c) : color(c) {}
         void onDraw() override;
-        void onMousePressedOverComponent(ofMouseEventArgs& mouse) override;
-        ofEvent<void> clickEvents;
+		ofColor color;
     };
+	
+	class WindowCornarButton : public ofxComponentBase {
+	public:
+		WindowCornarButton(ofColor c) : color(c) {}
+		void onDraw() override;
+		ofColor color;
+	};
 
     /// <summary>
     /// Window has a component
@@ -42,7 +49,7 @@ namespace ofxComponent {
             
             // geometry
             int titlebarHeight = 18;
-            int cornarHandle = 10;
+            int cornarHandle = 8;
             
             // setting
             bool resizable = true;
@@ -102,8 +109,14 @@ namespace ofxComponent {
         ofRectangle homeRect;
         shared_ptr<WindowHomeButton> homeButton = nullptr;
         void onHomeButton();
+		
+		// cornar button
+		shared_ptr<WindowCornarButton> cornarButton = nullptr;
+		void onCornarButton();
 
         void updateViewRect();
+		
+		bool isMouseOnCornar();
         
         // default setting
         // apply when make new window

@@ -62,11 +62,15 @@ void WindowComponent::onStart() {
 	homeRect = getRect();
     setAppearance(appearance);
 
-	homeButton = make_shared<WindowHomeButton>();
-	ofAddListener(homeButton->clickEvents, this, &WindowComponent::onHomeButton);
+	homeButton = make_shared<WindowHomeButton>(appearance.outlineColor);
+	ofAddListener(homeButton->mousePressedOverComponentEvents , this, &WindowComponent::onHomeButton);
 	addChild(homeButton);
+	
+	cornarButton = make_shared<WindowCornarButton>(appearance.outlineColor);
+	ofAddListener(cornarButton->mousePressedOverComponentEvents, this, &WindowComponent::onCornarButton);
+	addChild(cornarButton);
 
-    updateViewRect();
+	onLocalMatrixChanged();
 }
 
 // draw before children
@@ -89,16 +93,6 @@ void WindowComponent::postDraw() {
 	ofNoFill();
 	ofSetColor(appearance.outlineColor);
 	ofDrawRectangle(0.5, 0.5, getWidth()-1, getHeight()-1);
-
-	// window resize handle
-    if (appearance.resizable) {
-        ofPushMatrix();
-        float size = appearance.cornarHandle;
-        ofTranslate(getWidth(), getHeight());
-        ofFill();
-        ofDrawTriangle(-size, 0, 0, -size, 0, 0);
-        ofPopMatrix();
-    }
 }
 
 void WindowComponent::onMousePressed(ofMouseEventArgs& mouse) {
@@ -119,17 +113,6 @@ void WindowComponent::onMousePressed(ofMouseEventArgs& mouse) {
 	// not titlebar
 	else {
 		setMoving(false);
-
-		int cornarSize = appearance.cornarHandle;
-		if (appearance.resizable && getMouseX() > getWidth() - cornarSize && getMouseY() > getHeight() - cornarSize) {
-			cornarDragging = true;
-
-			// move to most top
-			auto p = getParent();
-			if (p) {
-				p->addChild(shared_from_this());
-			}
-		}
 	}
 }
 
@@ -161,6 +144,10 @@ void WindowComponent::onLocalMatrixChanged() {
 		homeButton->setActive(getRect() != homeRect);
 	}
 
+	if (cornarButton && getMovable()) {
+		float size = appearance.cornarHandle;
+		cornarButton->setRect(getWidth() - size, getHeight() - size, size, size);
+	}
 }
 
 void WindowComponent::setHomeRect(const float& x, const float& y, const float& width, const float& height){
@@ -217,6 +204,9 @@ shared_ptr<View> WindowComponent::setView(shared_ptr<View> _view) {
     // set
     view = _view;
     addChild(view);
+	
+	// move cornar button to front
+	if (cornarButton) addChild(cornarButton);
 
     updateViewRect();
     
@@ -227,6 +217,16 @@ void WindowComponent::onHomeButton() {
 	// move to home position
 	setRect(homeRect);
 	setMoving(false);
+}
+
+void WindowComponent::onCornarButton() {
+	cornarDragging = true;
+
+	// move to most top
+	auto p = getParent();
+	if (p) {
+		p->addChild(shared_from_this());
+	}
 }
 
 void WindowComponent::updateViewRect() {
@@ -244,11 +244,15 @@ void WindowComponent::updateViewRect() {
 }
 
 void WindowHomeButton::onDraw() {
-	ofSetColor(120);
+	ofSetColor(color);
 	ofFill();
 	ofDrawRectangle(0, 0, getWidth(), getHeight());
 }
 
-void WindowHomeButton::onMousePressedOverComponent(ofMouseEventArgs& mouse) {
-    ofNotifyEvent(clickEvents);
+void WindowCornarButton::onDraw() {
+	ofSetColor(color);
+	ofFill();
+	int w = getWidth();
+	int h = getHeight();
+	ofDrawTriangle(w, 0, 0, h, w, h);
 }
